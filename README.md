@@ -30,11 +30,11 @@ One service, one volume. The image is built from Claude Code Router's own Docker
 **First use:**
 
 1. Copy `CCR_WEB_AUTH_TOKEN` from the service's Variables tab and open `https://<your-domain>/?ccr_web_token=<token>`. Without the token the page loads but every action answers 401.
-2. Open **Providers → Add Provider**, pick a preset or a custom endpoint, enter its API key and choose models.
-3. Open **Server** and click **Start**. The gateway now starts by itself on every boot.
+2. The setup wizard asks for a provider, its API key and the models to use, then tests the connection.
+3. Its **Connect agent** step creates an agent profile inside the container. Accept the defaults and finish: the gateway starts, and it starts by itself on every boot from then on.
 4. Open **API Keys** and create a client key for each machine or teammate.
 
-**Connect a client.** The gateway is on the same domain as the UI. Models are named `Provider/model`.
+**Connect a client.** The gateway is on the same domain as the UI. The UI shows the endpoint as `http://127.0.0.1:3456`, which is the address inside the container: from outside, use your Railway domain. Models are named `Provider/model`.
 
 - Claude Code: `ANTHROPIC_BASE_URL=https://<your-domain>` and `ANTHROPIC_AUTH_TOKEN=<client key>`
 - OpenAI-compatible tools: base URL `https://<your-domain>/v1` with the client key as the API key
@@ -47,9 +47,9 @@ One service, one volume. The image is built from Claude Code Router's own Docker
 Notes and limits:
 
 - This is the server build of CCR. The desktop app's features are not in it: launching local agents, the system tray, desktop updates and browser login import.
-- **Agent Config** writes agent settings on the machine CCR runs on, which here is the container. For agents on your own machine, set the base URL and client key as above.
-- `/health` reports the gateway, so it answers 502 until a provider is added and the server is started. The service's own healthcheck uses the UI page instead.
-- 0.5 GB of RAM is enough: the gateway sits at about 330 MB with a provider configured.
+- **Agent Profiles** write agent settings on the machine CCR runs on, which here is the container. For agents on your own machine, set the base URL and client key as above.
+- `/health` reports the gateway, so it answers 502 until a provider is added and the gateway is running. The service's own healthcheck uses the UI page instead.
+- 0.5 GB of RAM is enough: the service sits at about 370 MB with the gateway running.
 - `/data` holds your provider credentials, client keys and request logs. Use **Settings → Export data** for backups and keep them private.
 - New Claude Code Router versions arrive as template updates.
 
